@@ -39,7 +39,7 @@ def show_results(key_word, list_results):
     print ("+Results {0}".format(key_word))
     print ("+" + "-" * 200 + "+")
     print (
-        "+Date            Description                                     Url                                    ")
+        "+Source            Date            Description                                     Url                                    ")
     print ("+" + "-" * 200 + "+")
 
     for dict_result in list_results:
@@ -49,7 +49,8 @@ def show_results(key_word, list_results):
                 if (count_print > MAX_PRINT_PER_SITE):
                     break
                 count_print += 1
-                print("+ {0} | {1} | {2} ".format(exploit_data["date"],
+                print("+ {0} | {1} | {2} ".format(source_value, 
+                                                  exploit_data["date"],
                                                   str(exploit_data["name"])[0:50],
                                                   exploit_data["url"]))
                 print ("+" + "-" * 200 + "+")
