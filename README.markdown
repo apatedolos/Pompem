@@ -59,6 +59,23 @@ Examples of use:
     $ python3.5 pompem.py -s FortiGate --txt
     $ python3.5 pompem.py -s ssh,ftp,mysql
 
+## Vulners API
+
+Vulners requires an API key, sign up to get one, then run.
+
+zsh
+
+```bash
+echo "export VULNERS_API_KEY='yourkey'" >> ~/.zshrc
+source ~/.zshrc
+```
+bash
+
+```bash
+echo "export VULNERS_API_KEY='yourkey'" >> ~/.bashrc
+source ~/.bashrc
+```
+
 ## License
 
 This program is free software: you can redistribute it and/or modify
