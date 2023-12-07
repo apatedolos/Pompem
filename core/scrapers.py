@@ -6,6 +6,7 @@ import datetime
 import re
 from core.request_worker import RequestWorker, RequestWorkerHttpLib
 import json
+import os
 
 
 class Scraper(Thread):
@@ -170,11 +171,14 @@ class Vulners(Scraper):
         self.path = "/api/v3/search/lucene/"
         self.list_result = []
         self.regex_date = re.compile(r"(\d{4})-(\d{2})-(\d{2})")
+        self.apikey = os.environ["VULNERS_API_KEY"]
+        data['apiKey'] = self.apikey
 
     def run(self, ):
         try:
             data = {}
             data['query'] = "{0} last year".format(self.key_word)
+            data['apiKey'] = self.apikey
             req_worker = RequestWorkerHttpLib(self.url_domain, self.path, data)
             req_worker.start()
             self.list_req_workers.append(req_worker)
@@ -187,6 +191,7 @@ class Vulners(Scraper):
         json_data = json.loads(html)
         for data in json_data['data']['search']:
             dict_result = {}
+            dict_result['source'] = "Vulners"
             dict_result['url'] = data["_source"]['href']
             dict_result['name'] = data["_source"]["title"]
             dict_result['date'] = self.regex_date.search(data["_source"]["published"]).group(0)
