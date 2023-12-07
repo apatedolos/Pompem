@@ -1,10 +1,11 @@
-#!/usr/bin/python3.5
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 
 from threading import Thread
 import datetime
 import re
 from core.request_worker import RequestWorker, RequestWorkerHttpLib
+from urllib import error
 import json
 import os
 
@@ -67,6 +68,7 @@ class PacketStorm(Scraper):
                 self.base_url,
                 self.regex_url.search(item_html).group(1)
             )
+            dict_result['source'] = "PacketStorm"
             dict_result['url'] = url_exploit
             dict_result['date'] = self.regex_date.search(item_html).group(1)
             dict_result['name'] = self.regex_name.search(item_html).group(1)
@@ -108,6 +110,7 @@ class CXSecurity(Scraper):
             item_html = item.group(0)
             dict_result = {}
             url_exploit = self.regex_url.search(item_html).group(1)
+            dict_result['source'] = "CXSecurity"
             dict_result['url'] = url_exploit
             match_date = self.regex_date.search(item_html)
             date = "{0}-{1}-{2}".format(match_date.group(3),
@@ -125,9 +128,9 @@ class ZeroDay(Scraper):
         self.name_site = "ZeroDay"
         self.name_class = ZeroDay.__name__
         self.key_word = key_word
-        self.url = "http://0day.today/search?search_request={0}"
-        self.session_url = "http://0day.today"
-        self.base_url = "http://0day.today"
+        self.url = "https://j5dtyooqyukedkrl.onion.to/search?search_request={0}"
+        self.session_url = "https://j5dtyooqyukedkrl.onion.to"
+        self.base_url = "https://j5dtyooqyukedkrl.onion.to"
         self.list_result = []
         self.regex_item = re.compile(r"(?msi)<div class='ExploitTableContent'.*?<div class='tips_value_big'>")
         self.regex_date = re.compile(r"(?msi)href='/date.*?>(\d{2})-(\d{2})-(\d{4})")
@@ -150,6 +153,7 @@ class ZeroDay(Scraper):
         for item in self.regex_item.finditer(html):
             item_html = item.group(0)
             dict_result = {}
+            dict_result['source'] = "ZeroDay"
             dict_result['url'] = self.base_url + self.regex_url.search(item_html).group(1)
             match_date = self.regex_date.search(item_html)
             date = "{0}-{1}-{2}".format(match_date.group(3),
@@ -172,7 +176,6 @@ class Vulners(Scraper):
         self.list_result = []
         self.regex_date = re.compile(r"(\d{4})-(\d{2})-(\d{2})")
         self.apikey = os.environ["VULNERS_API_KEY"]
-        data['apiKey'] = self.apikey
 
     def run(self, ):
         try:
@@ -232,6 +235,7 @@ class NationaVulnerabilityDB(Scraper):
         for item in self.regex_item.finditer(html):
             item_html = item.group(0)
             dict_results = {}
+            dict_result['source'] = "NVD"
             dict_results['name'] = self.regex_name.search(item_html).group(1)
             match_date = self.regex_date.search(item_html)
             date = "{0}-{1}-{2}".format(match_date.group(3),
@@ -277,9 +281,8 @@ class WpvulndbB(Scraper):
             dict_results = {}
             item_html = item.group(0)
             url = self.url_base + self.regex_url.search(item_html).group(1)
+            dict_result['source'] = "WpVulnDB"
             dict_results['url'] = url
             dict_results['name'] = self.regex_name.search(item_html).group(1)
             dict_results['date'] =  self.regex_date.search(item_html).group(1)
             self.list_result.append(dict_results)
-
-
